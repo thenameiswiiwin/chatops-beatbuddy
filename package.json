@@ -1,0 +1,11 @@
+{
+  "name": "chatops-beatbuddy",
+  "author": "Huy Nguyen (https://github.com/thenameiswiiwin)",
+  "version": "0.1.0",
+  "dependencies": {
+    "@netlify/functions": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.9"
+  }
+}
