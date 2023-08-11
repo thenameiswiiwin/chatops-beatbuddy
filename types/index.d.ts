@@ -96,3 +96,11 @@ type SlackBlockInput = {
 };
 
 type SlackBlock = SlackBlockSection | SlackBlockInput;
+
+type ModalArgs = {
+  trigger_id: string;
+  id: string;
+  title: string;
+  submit_text?: string;
+  blocks: SlackBlock[];
+};
