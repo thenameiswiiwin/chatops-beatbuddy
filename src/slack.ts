@@ -88,7 +88,7 @@ async function handleInteractivity(payload: SlackModalPayload) {
       await saveItem(fields);
 
       await slackApi("chat.postMessage", {
-        channel: "C05M7L3TAFM",
+        channel: process.env.CHANNEL_ID,
         text: `Hey y'all! :eyes: <@${payload.user.id}> just has submitted a new song:\n\n*${fields.song}*\n\nwith a genre of\n\n*${fields.songGenre}*\n\n...Enjoy and discuss.`,
       });
 
