@@ -97,10 +97,87 @@ type SlackBlockInput = {
 
 type SlackBlock = SlackBlockSection | SlackBlockInput;
 
+type GenreOpinionModalState = {
+  values: {
+    song_block: {
+      song: {
+        type: "plain_text_input";
+        value: string;
+      };
+    };
+    song_genre_block: {
+      song_genre: {
+        type: "static_select";
+        selected_option: {
+          text: {
+            type: "plain_text";
+            text: string;
+            emoji: boolean;
+          };
+          value: string;
+        };
+      };
+    };
+  };
+};
+
 type ModalArgs = {
   trigger_id: string;
   id: string;
   title: string;
   submit_text?: string;
   blocks: SlackBlock[];
+};
+
+type SlackModalPayload = {
+  type: string;
+  callback_id?: string;
+  team: {
+    id: string;
+    domain: string;
+  };
+  user: {
+    id: string;
+    username: string;
+    name: string;
+    team_id: string;
+  };
+  channel?: {
+    id: string;
+    name: string;
+  };
+  message: {
+    ts: string;
+    thread_ts?: string;
+  };
+  api_app_id: string;
+  token: string;
+  trigger_id: string;
+  view: {
+    id: string;
+    team_id: string;
+    type: string;
+    blocks: SlackBlock[];
+    private_metadata: string;
+    callback_id: string;
+    state: GenreOpinionModalState;
+    hash: string;
+    title: {
+      type: "plain_text";
+      text: string;
+      emoji: boolean;
+    };
+    clear_on_close: boolean;
+    notify_on_close: boolean;
+    close: null;
+    submit: {
+      type: "plain_text";
+      text: string;
+      emoji: boolean;
+    };
+    app_id: string;
+    external_id: string;
+    app_installed_team_id: string;
+    bot_id: string;
+  };
 };

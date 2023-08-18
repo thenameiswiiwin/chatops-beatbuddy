@@ -17,7 +17,7 @@ async function handleSlashCommand(payload: SlackSlashCommandPayload) {
               text: "Welcome to BeatBuddy!\n\nGet ready to groove with your favorite tunes. Share the music that gets you in the zone and lets your creativity flow. Whether it's your all-time favorite song or the artist that brings out your musical spirit, let's create some awesome rhythms together!",
             }),
             blocks.input({
-              id: "song-input",
+              id: "song",
               label:
                 "Deposite your favorite song and artist you like to jam to here.",
               placeholder: "Example: Essence - Wizkid ft. Tems",
@@ -25,26 +25,26 @@ async function handleSlashCommand(payload: SlackSlashCommandPayload) {
               hint: "Provide the name of the song you like to jam to!",
             }),
             blocks.select({
-              id: "song-genre",
+              id: "song_genre",
               label: "Select the song's genre",
               placeholder: "Choose a genre",
               options: [
-                { label: "Pop", value: "pop" },
-                { label: "Hip-Hop", value: "hip-hop" },
-                { label: "R&B", value: "r&b" },
-                { label: "Latin", value: "latin" },
-                { label: "Rock", value: "rock" },
-                { label: "Electronic", value: "electronic" },
-                { label: "Country", value: "country" },
-                { label: "Jazz", value: "jazz" },
-                { label: "Blues", value: "blues" },
-                { label: "Reggae", value: "reggae" },
-                { label: "Funk", value: "funk" },
-                { label: "Classical", value: "classical" },
-                { label: "Indie", value: "indie" },
-                { label: "Metal", value: "metal" },
-                { label: "Alternative", value: "alternative" },
-                { label: "Dance", value: "dance" },
+                { label: "Pop", value: "Pop" },
+                { label: "Hip-Hop", value: "Hip-Hop" },
+                { label: "R&B", value: "R&B" },
+                { label: "Latin", value: "Latin" },
+                { label: "Rock", value: "Rock" },
+                { label: "Electronic", value: "Electronic" },
+                { label: "Country", value: "Country" },
+                { label: "Jazz", value: "Jazz" },
+                { label: "Blues", value: "Blues" },
+                { label: "Reggae", value: "Reggae" },
+                { label: "Funk", value: "Funk" },
+                { label: "Classical", value: "Classical" },
+                { label: "Indie", value: "Indie" },
+                { label: "Metal", value: "Metal" },
+                { label: "Alternative", value: "Alternative" },
+                { label: "Dance", value: "Dance" },
               ],
             }),
           ],
@@ -70,6 +70,39 @@ async function handleSlashCommand(payload: SlackSlashCommandPayload) {
   };
 }
 
+async function handleInteractivity(payload: SlackModalPayload) {
+  const callback_id = payload.callback_id ?? payload.view.callback_id;
+
+  switch (callback_id) {
+    case "beatbuddy-modal":
+      const data = payload.view.state.values;
+      const fields = {
+        songInput: data.song_block.song.value,
+        songGenre: data.song_genre_block.song_genre.selected_option.value,
+        submitter: payload.user.name,
+      };
+
+      await slackApi("chat.postMessage", {
+        channel: "C05M7L3TAFM",
+        text: `Hey y'all! :eyes: <@${payload.user.id}> just has submitted a new song:\n\n*${fields.songInput}*\n\nwith a genre of\n\n*${fields.songGenre}*\n\n...Enjoy and discuss.`,
+      });
+
+      break;
+
+    default:
+      console.log(`Callback ID ${callback_id} not supported`);
+      return {
+        statusCode: 400,
+        body: `Callback ID ${callback_id} not supported`,
+      };
+  }
+
+  return {
+    statusCode: 200,
+    body: "",
+  };
+}
+
 export const handler: Handler = async (event) => {
   const valid = verifySlackRequest(event);
   if (!valid) {
@@ -84,6 +117,11 @@ export const handler: Handler = async (event) => {
   const body = parse(event.body ?? "") as SlackPayload;
   if (body.command) {
     return handleSlashCommand(body as SlackSlashCommandPayload);
+  }
+
+  if (body.payload) {
+    const payload = JSON.parse(body.payload);
+    return handleInteractivity(payload);
   }
 
   return {
