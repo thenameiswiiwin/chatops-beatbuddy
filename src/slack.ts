@@ -2,6 +2,7 @@ import type { Handler } from "@netlify/functions";
 
 import { parse } from "querystring";
 import { blocks, modal, slackApi, verifySlackRequest } from "./utils/slack";
+import { saveItem } from "./utils/notion";
 
 async function handleSlashCommand(payload: SlackSlashCommandPayload) {
   switch (payload.command) {
@@ -73,18 +74,22 @@ async function handleSlashCommand(payload: SlackSlashCommandPayload) {
 async function handleInteractivity(payload: SlackModalPayload) {
   const callback_id = payload.callback_id ?? payload.view.callback_id;
 
+  console.log({ callback_id });
+
   switch (callback_id) {
     case "beatbuddy-modal":
       const data = payload.view.state.values;
       const fields = {
-        songInput: data.song_block.song.value,
+        song: data.song_block.song.value,
         songGenre: data.song_genre_block.song_genre.selected_option.value,
         submitter: payload.user.name,
       };
 
+      await saveItem(fields);
+
       await slackApi("chat.postMessage", {
         channel: "C05M7L3TAFM",
-        text: `Hey y'all! :eyes: <@${payload.user.id}> just has submitted a new song:\n\n*${fields.songInput}*\n\nwith a genre of\n\n*${fields.songGenre}*\n\n...Enjoy and discuss.`,
+        text: `Hey y'all! :eyes: <@${payload.user.id}> just has submitted a new song:\n\n*${fields.song}*\n\nwith a genre of\n\n*${fields.songGenre}*\n\n...Enjoy and discuss.`,
       });
 
       break;

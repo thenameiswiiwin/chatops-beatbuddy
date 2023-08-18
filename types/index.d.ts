@@ -181,3 +181,32 @@ type SlackModalPayload = {
     bot_id: string;
   };
 };
+
+type NotionItem = {
+  properties: {
+    song: {
+      title: {
+        text: {
+          content: string;
+        };
+      }[];
+    };
+    songGenre: {
+      select: {
+        name: string;
+      };
+    };
+    Status: {
+      status: {
+        name: string;
+      };
+    };
+  };
+};
+
+type NewItem = {
+  song: string;
+  songGenre: string;
+  status?: string;
+  submitter?: string;
+};
