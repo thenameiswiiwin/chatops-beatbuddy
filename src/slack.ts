@@ -89,6 +89,19 @@ async function handleInteractivity(payload: SlackModalPayload) {
 
       break;
 
+    case "start-music-sharing":
+      const channel = payload.channel?.id;
+      const user_id = payload.user.id;
+      const thread_ts = payload.message.thread_ts ?? payload.message.ts;
+
+      await slackApi("chat.postMessage", {
+        channel,
+        thread_ts,
+        text: `🎶 Hey <@${user_id}>! This song deserves the spotlight. Run the \`/beatbuddy\` slash command in a main channel to share it with everyone.`,
+      });
+
+      break;
+
     default:
       console.log(`Callback ID ${callback_id} not supported`);
       return {
