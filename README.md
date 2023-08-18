@@ -2,6 +2,8 @@
 
 [Usage Link](https://thenameiswiiwin.slack.com/archives/C05M7L3TAFM)
 
+[Notion Board](https://www.notion.so/5c3aaf1ee223482c9c74a7eb8ff65e90?v=3143d1e5962b4545b17cfe40c1e5f111)
+
 - **Custom bot for Slack:** This involves creating a bot user for your Slack workspace. The bot will interact with users and perform tasks based on commands and interactions.
 
 - **Slash command to accept task requests and save them to Notion:** A slash command allows users to trigger specific actions by typing a command in the chat. In this case, the slash command could be use to accept task requests and save them to a tool like Notion for further management.
